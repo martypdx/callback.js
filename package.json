@@ -1,0 +1,18 @@
+{
+  "author": "Marty Nelson <@martypdx>",
+  "name": "callback",
+  "description": "expressive, terse, aynchronous callback function helpers",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/martypdx/callback.js.git"
+  },
+  "engines": {
+    "node": "~0.6.6"
+  },
+  "dependencies": {},
+  "devDependencies": {
+      "mocha": "*"
+    , "should": "*"
+  }
+}
