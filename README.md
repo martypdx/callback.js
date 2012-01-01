@@ -5,30 +5,44 @@ Expressive, terse, functions for aynchronous and callback functions.
 You don't need flow control, the real issue with asynchronous 
 coding is mediating between asynchronous functions with signature:
 
-    function asynch([arg1, [arg2, [...]],] cb)
+function async([arg1, [arg2, [...]],] cb)
 
-as the callback signature:
+and the callback signature:
 
 	function callback(err, result) { ... }
 
 Callback.js extends `Function.prototype` and allows you to write code like:
 
-	function rimraf(d, cb) {  
+```javascript
+function rimraf(d, cb) {  
 
-		if(!d.isDirectory) {
-			function addPath(s) { s.path = d; return s }
-			return fs.lstat(d, rimraf.use(addPath, cb)) 
-		}
-
-		dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
-
-		function dir(d, cb) {		
-			function fullPath(f) { return path.join(d, f) }
-			fs.readdir(d, rimraf.each(fullPath, fs.rmdir.with(d, cb) ) )
-		}
+	if(!d.isDirectory) {
+		function addPath(s) { s.path = d; return s }
+		return fs.lstat(d, rimraf.use(addPath, cb)) 
 	}
 
+	dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
+
+	function dir(d, cb) {		
+		function fullPath(f) { return path.join(d, f) }
+		fs.readdir(d, rimraf.each(fullPath, fs.rmdir.with(d, cb) ) )
+	}
+}
+```
+
+## Install
+
+	npm install callback
+
 # Functions for asynchronous functions
+
+This functions are meant to be used with asynchronous functions of type:
+
+    function asynch([arg1, [arg2, [...]],] cb)
+
+and are largely meant to adapt them as callbacks:
+
+	asyncFn.use(cb)
 
 ## .use([transform,] cb)
 
