@@ -5,7 +5,7 @@ Expressive, terse, functions for aynchronous and callback functions.
 You don't need flow control, the real issue with asynchronous 
 coding is mediating between asynchronous functions with signature:
 
-function async([arg1, [arg2, [...]],] cb)
+	function async([arg1, [arg2, [...]],] cb)
 
 and the callback signature:
 
