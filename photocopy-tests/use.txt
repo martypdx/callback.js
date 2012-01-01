@@ -1,0 +1,24 @@
+fn called with input
+err called with input
+fn called with input
+noinputFn called
+[Error: `cb` should be used on async functions with signature f(input, cb). Consider using `with` instead.]
+fn called with input
+err called with input
+fn called with input
+noinputFn called
+[Error: `cb` should be used on async functions with signature f(input, cb). Consider using `with` instead.]
+fn2 called with fn output
+done erred with [Error: fail]
+err called with fn output
+fn2 called with noinputFn output
+fn2 called with fn output added Text
+done erred with [Error: fail]
+err called with fn output added Text
+fn2 called with noinputFn output added Text
+done called with fn2 output
+done erred with [Error: fail]
+done called with fn2 output
+done called with fn2 output
+done erred with [Error: fail]
+done called with fn2 output
