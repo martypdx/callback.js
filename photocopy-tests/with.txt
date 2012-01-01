@@ -1,0 +1,12 @@
+fn called with input
+fn called with input
+err called with input
+fn called with input
+[Error: `with` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.]
+noinputFn called
+multiinputFn called with with is nice
+done erred with [Error: fail]
+multiinputErr called with with is nice
+done called with noinputFn output
+done called with multiinputFn output
+done erred with [Error: multiinputErr fail]

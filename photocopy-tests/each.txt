@@ -1,0 +1,20 @@
+multiplex called with input
+multiplex called with input
+multiplex called with input
+multiplex called with input
+fn called with output1
+fn called with output2
+fn called with output3
+err called with output1
+err called with output2
+err called with output3
+fn called with output1 transformed
+fn called with output2 transformed
+fn called with output3 transformed
+err called with output1 transformed
+err called with output2 transformed
+err called with output3 transformed
+done called with [ 'fn output', 'fn output', 'fn output' ]
+done erred with [Error: fail]
+done called with [ 'fn output', 'fn output', 'fn output' ]
+done erred with [Error: fail]
