@@ -1,0 +1,12 @@
+fn called with input
+fn called with input
+err called with input
+fn called with input
+[Error: `add` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.]
+fn2 called with fn output
+multiinputFn called with fn output is nice
+done erred with [Error: fail]
+multiinputErr called with fn output is nice
+done called with fn2 output
+done called with multiinputFn output
+done erred with [Error: multiinputErr fail]

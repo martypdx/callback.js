@@ -29,13 +29,13 @@ Object.defineProperty(Function.prototype, 'use', {
 
 	var fn = this
 	
-	return function use(transform, cb) {
+	return function use_fn(transform, cb) {
 		if(!cb) {
 			cb = transform
 			transform = null
 		}
 	
-		return function usecb(err, result) {
+		return function use_cb(err, result) {
 			//custom err if cb is not fn ?
 			if (err) { return cb(err) }
 			fn(transform ? transform(result) : result, cb)
@@ -46,21 +46,21 @@ Object.defineProperty(Function.prototype, 'use', {
   configurable: true
 })
 
-Object.defineProperty(Function.prototype, 'pass', {
+Object.defineProperty(Function.prototype, 'add', {
   set: function(){},
   get: function(){
 	//console.log('pass called on f with length', this.length)
 	if(isDev && this.length === 0) {
-		throw new Error('`pass` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.')
+		throw new Error('`add` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.')
 	}
 
-	return function pass() {
+	return function add_fn() {
 
 		var fn = this
 		 ,	args = Array.prototype.slice.call(arguments)
 		 ,	cb = arguments[arguments.length-1]
 
-		return function passcb(err, result) {
+		return function add_cb(err, result) {
 			//check if cb is fn ?
 			if (err) return cb(err)
 
@@ -75,21 +75,21 @@ Object.defineProperty(Function.prototype, 'pass', {
   configurable: true
 })
 
-Object.defineProperty(Function.prototype, 'with', {
+Object.defineProperty(Function.prototype, 'pass', {
   set: function(){},
   get: function(){
 	
 	if(isDev && this.length === 0) {
-		throw new Error('`with` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.')
+		throw new Error('`pass` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.')
 	}
 
-	return function withFn() {
+	return function pass_fn() {
 
 		var fn = this
 		 ,	args = arguments
 		 ,	cb = arguments[arguments.length-1]
 
-		return function withcb(err, result) {
+		return function pass_cb(err, result) {
 			if (err) return cb(err)
 			
 			var ctx = null
@@ -109,18 +109,16 @@ Object.defineProperty(Function.prototype, 'each', {
 		throw new Error('`each` is for async functions with signature f(input, cb). Use `apply` or `xform` first.')
 	}
 
-	return function eachFn(transform, cb) {
+	return function each_fn(transform, cb) {
 		var fn = this
 		if(!cb) {
 			cb = transform
 			transform = null
 		}
 
-		return function(err, result) {
-			if (err) return cb(err)
-
+		return function each_cb(err, result) {
+			if(err) return cb(err)
 			var count = result.length // || 0 ? Or return cb(null, result) ?
-
 			if(count === 0) return cb(null, [])
 
 			var	errState = null
@@ -144,11 +142,49 @@ Object.defineProperty(Function.prototype, 'each', {
   configurable: true
 })
 
+/* Synchronous to cb */
 
 
+Object.defineProperty(Function.prototype, 'with', {
+  set: function(){},
+  get: function(){
+	
+	return function with_fn() {
+
+		var fn = this
+		 ,	args = Array.prototype.slice.call(arguments)
+
+		return function with_cb(err, result) {
+			if (err) throw err
+				
+		 	args.push(result)
+			
+			var ctx = null
+			fn.apply(ctx, args)
+		}
+	}
+
+  },
+  configurable: true
+})
 
 
+Object.defineProperty(Function.prototype, 'cb', {
+  set: function(){},
+  get: function(){
 
+	var fn = this
+
+	return function cb_cb(err, result) {
+		if (err) throw err
+		fn(result)
+	}
+
+  },
+  configurable: true
+})
+
+/* adapters */
 
 Function.prototype.xform = function(transform) {
 	var fn = this

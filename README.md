@@ -5,7 +5,7 @@ Expressive, terse, functions for aynchronous and callback functions.
 You don't need flow control, the real issue with asynchronous 
 coding is mediating between asynchronous functions with signature:
 
-	function async([arg1, [arg2, [...]],] cb)
+	function async([arg1, [arg2, [...]],] cb) { ... }
 
 and the callback signature:
 
@@ -25,7 +25,7 @@ function rimraf(d, cb) {
 
 	function dir(d, cb) {		
 		function fullPath(f) { return path.join(d, f) }
-		fs.readdir(d, rimraf.each(fullPath, fs.rmdir.with(d, cb) ) )
+		fs.readdir(d, rimraf.each(fullPath, fs.rmdir.pass(d, cb) ) )
 	}
 }
 ```
@@ -36,11 +36,11 @@ function rimraf(d, cb) {
 
 # Functions for asynchronous functions
 
-These functions are meant to be used with asynchronous functions of type:
+These functions are used with asynchronous functions of type:
 
     function async([arg1, [arg2, [...]],] cb)
 
-and are meant to adapt them as callbacks:
+and wrap them to be used as callbacks:
 
 	async.use(cb)
 
@@ -80,12 +80,12 @@ is equivelent to:
 
 For functions that have no input arguments, or more than one argument, see `with` and `pass`.
 
-## pass([arg1, [arg2, [...]],] cb)
+## add([arg1, [arg2, [...]],] cb)
 
-Use `pass` to include arguments *in addition to* the callback results argument
-which will still be included as the first argument:
+Use `add` to add arguments *in addition to* the callback result argument
+which will be included as the first argument:
 
-	someFn( 'input', fs.open.pass('a', cb) )
+	someFn( 'input', fs.open.add('a', cb) )
 
 is equivelent to:
 
@@ -94,19 +94,18 @@ is equivelent to:
 		fs.open(result, 'a', cb)
 	})
 
-Calling `pass` with only the callback: `asyncFn.pass(cb)` is equivelent to calling `asyncFn.use(cb)`.
+Calling `add` with only the callback: `asyncFn.add(cb)` is equivelent to calling `asyncFn.use(cb)`.
 
-Unlike `use`, pass does not take a transformation. You can add `adapt` or `xform` to achieve the same result.
+Unlike `use`, add does not take a transformation. You can add `adapt` or `xform` to achieve the same results.
 
-`pass` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
+`add` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
 
-
-## with([arg1, [arg2, [...]],] cb)
+## pass([arg1, [arg2, [...]],] cb)
 
 Use `pass` to indicate the arguments to be passed to the async function being used for the callback. 
-Unlike `pass` or `use`, the result passed to the callback is discarded:
+Unlike `add` or `use`, the callback result is discarded:
 
-	someFn( 'input', fs.rmdir.with(dir, cb) )
+	someFn( 'input', fs.rmdir.pass(dir, cb) )
 
 is equivelent to:
 
@@ -115,15 +114,15 @@ is equivelent to:
 		fs.rmdir(dir, cb)
 	})
 
-`with` can also be used for async functions that take no input except for a callback
- (whereas `use` and `pass` will always pass the result as the first argument).
+`pass` can also be used for async functions that take no input except for a callback 
+(whereas `use` and `add` will always pass the result as the first argument).
 
-`with` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
+`pass` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
 
 ## each([transform,] cb)
 
 `each` calls an asynchronous function in parallel based on a callback result that can be called with `forEach`. 
-Results are combined into an array passed as the result to `cb`:
+Results are combined into an array which is passed as the result to `cb`:
 
 	fs.readdir(dir, fs.open.each(cb))
 
@@ -131,7 +130,6 @@ is equivelent to:
 
 	fs.readdir(dir, function(err, result) {
 		if(err) return cb(err)
-
 		var count = result.length
 		if(count === 0) return cb(null, [])
 
@@ -150,7 +148,42 @@ is equivelent to:
 		})
 	})
 
+# Functions for synchronous functions
+
+These functions are used with synchronous functions that have no callback of type:
+
+    function async([arg1, [arg2, [...]],])
+
+Typically, these would be used as endpoints for asynchronous functions:
+
+	console.log.cb
+
+The functions will throw any err received on callback. 
+See `err` to provide an alternative behavior.
+
+# cb
+
+A simple property getter (not a method) that adapts a synchronous function 
+by passing the callback results as the first argument:
+
+	console.log.cb
+
+`cb` will throw any err recieved on the callback.
+
+# with
+
+Like `cb`, except that `with` allows the specification of arguments *before*
+the callback result:
+
+	fs.readFile( 'run.js', console.log.with('%s') )
+
+Useful for specifying the template on response.render:
+
+	app.get('/user/:id', function (req, res) {
+	    getUser(req.params.id, res.render.with('user')
+	})
 
 
 # Conditionals
+
 

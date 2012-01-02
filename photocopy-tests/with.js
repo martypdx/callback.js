@@ -2,31 +2,21 @@ require('../callback')
 var t = require('./test-functions')
 
 
-var fn = function(input, cb) {
-	t.fn(input, t.noinputFn.with(cb))
-}
-fn('input', t.done)
+t.fn('input', console.log.with())
 
-var multifn = function(input, cb) {
-	t.fn(input, t.multiinputFn.with('with', 'is', 'nice', cb) )
+var render = function(template, data){
+	console.log('render', template, 'with', data)
 }
-multifn('input', t.done)
 
-var fnErr = function(input, cb) {
-	t.err(input, t.multiinputFn.with('with', 'is', 'nice', cb) )
-}
-fnErr('input', t.done)
+t.fn('input', render.with('template'))
 
-var fn2Err = function(input, cb) {
-	t.fn(input, t.multiinputErr.with('with', 'is', 'nice', cb) )
+var cb = function(err, result) {
+	try { 
+		render.with('template')(err, result) 
+	} catch(e) {
+		console.log(e)
+	}	
 }
-fn2Err('input', t.done)
+t.err('input', cb)
 
-var naFn2 = function(input, cb) {
-	t.fn(t.noargsFn.with(cb))
-}
-try {
-	naFn2('input', t.done)
-} catch(e) {
-	console.log(e)
-}
+
