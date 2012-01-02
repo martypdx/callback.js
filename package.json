@@ -3,6 +3,7 @@
   "name": "callback",
   "description": "Expressive, terse, functions for aynchronous and callback functions",
   "version": "0.0.1",
+  "homepage" : "https://github.com/martypdx/callback.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/martypdx/callback.js.git"
