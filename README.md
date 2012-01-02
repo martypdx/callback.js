@@ -11,7 +11,7 @@ and the callback signature:
 
 	function callback(err, result) { ... }
 
-Callback.js extends `Function.prototype` and allows you to write code like:
+*callback* extends `Function.prototype` and allows you to write code like:
 
 	function rimraf(d, cb) {  
 
@@ -28,8 +28,8 @@ Callback.js extends `Function.prototype` and allows you to write code like:
 		}
 	}
 
-*callback* doesn't assume or dictate any particular coding style, 
-doesn't force you to use pass your functions into library objects,
+*callback* doesn't assume or dictate any particular coding style. 
+Doesn't require creating library objects to manage your functions
 or try to pretend you're writing snychronous code.
 
 Use as much or as little as you like.
