@@ -1,9 +1,9 @@
 # callback.js
 
-Expressive, terse, functions for aynchronous and callback functions.
+Expressive, terse, functions for asynchronous and callback functions.
 
-You don't need flow control, the real issue with asynchronous 
-coding is mediating between asynchronous functions with signature:
+The real issue with asynchronous coding isn't flow control, 
+it's mediating between asynchronous functions with signature:
 
 	function async([arg1, [arg2, [...]],] cb) { ... }
 
@@ -51,7 +51,7 @@ results of the callback in the invocation of the function:
 
 	f1(input, f2.use(cb))
 	
-is equivelent to:
+is equivalent to:
 
 	f1('input', function(err, result) {
 		if(err) return cb(err)
@@ -67,7 +67,7 @@ The transformation is included *before* the cb argument:
 
 	f1(input, f2.use(addText, cb))
 
-is equivelent to:
+is equivalent to:
 
 	f1('input', function(err, result) {
 		if(err) return cb(err)
@@ -87,14 +87,14 @@ which will be included as the first argument:
 
 	someFn( 'input', fs.open.add('a', cb) )
 
-is equivelent to:
+is equivalent to:
 
 	someFn( 'input', function(err, result) {
 		if(err) return cb(err)
 		fs.open(result, 'a', cb)
 	})
 
-Calling `add` with only the callback: `asyncFn.add(cb)` is equivelent to calling `asyncFn.use(cb)`.
+Calling `add` with only the callback: `asyncFn.add(cb)` is equivalent to calling `asyncFn.use(cb)`.
 
 Unlike `use`, add does not take a transformation. You can add `adapt` or `xform` to achieve the same results.
 
@@ -126,7 +126,7 @@ Results are combined into an array which is passed as the result to `cb`:
 
 	fs.readdir(dir, fs.open.each(cb))
 
-is equivelent to:
+is equivalent to:
 
 	fs.readdir(dir, function(err, result) {
 		if(err) return cb(err)
@@ -168,7 +168,7 @@ by passing the callback results as the first argument:
 
 	console.log.cb
 
-`cb` will throw any err recieved on the callback.
+`cb` will throw any err received on the callback.
 
 # with
 
