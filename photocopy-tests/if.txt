@@ -1,5 +1,13 @@
 true
 fn called with input
+err called with input
+fn called with input
 elseFn called with input
+err called with input
+elseErr called with input
+done called with fn output
+done erred with [Error: fail]
 done called with fn output
 done called with else output
+done erred with [Error: fail]
+done erred with [Error: else fail]
