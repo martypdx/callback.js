@@ -13,22 +13,26 @@ and the callback signature:
 
 Callback.js extends `Function.prototype` and allows you to write code like:
 
-``` javascript
-function rimraf(d, cb) {  
+	function rimraf(d, cb) {  
 
-	if(!d.isDirectory) {
-		function addPath(s) { s.path = d; return s }
-		return fs.lstat(d, rimraf.use(addPath, cb)) 
+		if(!d.isDirectory) {
+			function addPath(s) { s.path = d; return s }
+			return fs.lstat(d, rimraf.use(addPath, cb)) 
+		}
+
+		dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
+
+		function dir(d, cb) {		
+			function fullPath(f) { return path.join(d, f) }
+			fs.readdir(d, rimraf.each(fullPath, fs.rmdir.pass(d, cb) ) )
+		}
 	}
 
-	dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
+*callback* doesn't assume or dictate any particular coding style, 
+doesn't force you to use pass your functions into library objects,
+or try to pretend you're writing snychronous code.
 
-	function dir(d, cb) {		
-		function fullPath(f) { return path.join(d, f) }
-		fs.readdir(d, rimraf.each(fullPath, fs.rmdir.pass(d, cb) ) )
-	}
-}
-```
+Use as much or as little as you like.
 
 ## Install
 
