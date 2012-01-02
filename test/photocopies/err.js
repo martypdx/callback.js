@@ -1,23 +1,6 @@
 require('../../')
 var t = require('../test-functions')
 
-Object.defineProperty(Function.prototype, 'err', {
-  set: function(){},
-  get: function(){
-	
-	return function err_fn(errHandler) {
-		var fn = this
-
-		return function err_cb(err, result) {
-			if (err) return errHandler(err)
-			fn(err, result)
-		}
-	}
-
-  },
-  configurable: true
-})
-
 
 function error(err) {
 	console.log('error is', err)

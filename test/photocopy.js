@@ -12,18 +12,26 @@ var fs = require('fs')
  ,  buf = []
  ,  spawn = require('child_process').spawn
  ,  child = spawn('node', [ fileToTest ])
+ //time for Commander!!!
  ,	pin = process.argv.length > 3 && process.argv[3] === '-p'
+ ,	quiet = process.argv.length > 3 && process.argv[3] === '-q'
+
 
 child.stderr.on('data', function(data){
     buf.push(data)
-    process.stderr.write(data)
+    if(!quiet) {
+    	process.stderr.write(data)
+	}
 
 })
 
 child.stdout.on('data', function(data){
     buf.push(data)
-    process.stdout.write(data)
+    if(!quiet) {
+    	process.stdout.write(data)
+    }
 })
+
 
 /*
 function write(data) {
@@ -35,6 +43,11 @@ function writeLine(data) {
     write(data + '\n')
 }
 */
+var passed = false
+ 
+process.on('exit', function(){
+	if(!passed) process.exit(1)
+})
 
 child.on('exit', function (code) {
   	var actual = buf.join('')
@@ -45,7 +58,10 @@ child.on('exit', function (code) {
 
 	if(pin) { pinOutcome(fPath, actual) }
 
-	testOutcome(fPath, actual)
+	if(!testOutcome(fPath, actual)) {
+		
+		
+	}
 })
 
 function pinOutcome(file, actual) {
@@ -55,13 +71,23 @@ function pinOutcome(file, actual) {
 
 function testOutcome(file, actual) {
 	var outcome = fs.readFileSync(file).toString()
-	if(actual === outcome) {
-		console.log('----------'.underline) 
-		console.log('passed'.green)
+	 ,	name = path.basename(file, '.txt')
+	
+	passed = (actual === outcome)
+	
+	if(passed) {
+		if(!quiet) {
+			console.log('----------'.underline) 
+		}
+		console.log(name, 'passed'.green)
 	} else {
-		console.log('\nfailed!\n'.red)
+		console.log(name, 'failed!'.red)
 		console.log('Expected>>'.red + outcome + '<<'.red)
 		console.log('Actual  >>'.red + actual + '<<'.red)
 	}
-	console.log('----------'.underline) 
+	if(!quiet) {
+		console.log('----------'.underline) 
+	}
+
+	return passed
 }

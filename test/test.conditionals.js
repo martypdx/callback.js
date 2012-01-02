@@ -1,4 +1,4 @@
-require('../callback')
+require('../')
 var should = require('should')
 
 var test = {

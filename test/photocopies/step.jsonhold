@@ -2,6 +2,19 @@ require('../../')
 var t = require('../test-functions')
 
 
+function shim(files, cb) {
+	var addends = [];
+	(function test() {
+		var file = files.shift()
+		if(!file) {
+	  		return cb()
+		}
+
+		testFile(file, test.cb)
+	   
+	})()
+}
+
 t.multiplex('input', t.fn.each(t.done))
 t.multiplex('input', t.err.each(t.done))
 

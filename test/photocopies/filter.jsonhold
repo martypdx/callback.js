@@ -1,0 +1,30 @@
+require('../../')
+var t = require('../test-functions')
+
+
+function filter(r) {
+	return r !== 'output2'
+}
+function filter2(r) {
+	return r !== transform('output2')
+}
+
+function transform(r) {
+	return r + ' transformed'
+}
+
+
+t.multiplex('input', t.fn.filter(filter).each(t.done))
+t.multiplex('input', t.err.filter(filter).each(t.done))
+
+t.multiplex('input', t.fn.filter(filter2).each(transform, t.done))
+t.multiplex('input', t.err.filter(filter2).each(transform, t.done))
+
+
+t.multiplex('input', console.log.filter(filter).each())
+t.multiplex('input', console.log.filter(filter2).each(transform))
+
+//filter doesn't work with multiinput targets :(
+//t.multiplex('input', t.multiinputFn.filter(filter, 'input2', 'input3').each())
+
+

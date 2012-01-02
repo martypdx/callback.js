@@ -2,6 +2,8 @@ multiplex called with input
 multiplex called with input
 multiplex called with input
 multiplex called with input
+multiplex called with input
+multiplex called with input
 fn called with output1
 fn called with output2
 fn called with output3
@@ -14,6 +16,12 @@ fn called with output3 transformed
 err called with output1 transformed
 err called with output2 transformed
 err called with output3 transformed
+output1
+output2
+output3
+output1 transformed
+output2 transformed
+output3 transformed
 done called with [ 'fn output', 'fn output', 'fn output' ]
 done erred with [Error: fail]
 done called with [ 'fn output', 'fn output', 'fn output' ]

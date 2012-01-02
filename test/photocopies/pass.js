@@ -1,6 +1,7 @@
 require('../../')
 var t = require('../test-functions')
 
+
 var fn = function(input, cb) {
 	t.fn(input, t.fn2.pass('input', cb))
 }
@@ -27,11 +28,6 @@ var fn2Err = function(input, cb) {
 fn2Err('input', t.done)
 
 
-var naFn2 = function(input, cb) {
-	t.fn(t.noargsFn.pass(cb))
-}
-try {
-	naFn2('input', t.done)
-} catch(e) {
-	console.log(e)
-}
+//t.done will not be called!
+t.fn('input', t.noargsFn.pass(t.done))
+

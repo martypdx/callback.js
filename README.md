@@ -14,19 +14,27 @@ and the callback signature:
 *callback* extends `Function.prototype` and allows you to write code like:
 
 	function rimraf(d, cb) {  
-
 		if(!d.isDirectory) {
-			function addPath(s) { s.path = d; return s }
-			return fs.lstat(d, rimraf.use(addPath, cb)) 
+			return stat(d, rimraf.use(cb) )
 		}
-
+		
 		dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
 
 		function dir(d, cb) {		
-			function fullPath(f) { return path.join(d, f) }
-			fs.readdir(d, rimraf.each(fullPath, fs.rmdir.pass(d, cb) ) )
+			readdir(d, rimraf.each(fs.rmdir.pass(d, cb)))
 		}
 	}
+
+	var stat = fs.stat.adapt(function(stat, path) {
+		stat.path = path
+		return stat
+	})
+
+	var readdir = fs.readdir.adapt(function(files, d){
+		return files.map(function(f){
+			return path.join(d, f) 
+		})
+	})
 
 *callback* doesn't assume or dictate any particular coding style. 
 Doesn't require creating library objects to manage your functions
@@ -318,7 +326,30 @@ Can also include an else function:
 
 ## Tests
 
+The tests are done using a bit of a work-in-progress technique called
+_photocopy testing_. The tests work, they're just a bit more difficult
+to maintain without some tooling that I have planned.
+
+You can run the tests with
+
+	callback.js> make
+
 ## Benchmarks
+
+In the _examples_ _rimraf_ directory is a benchmark that runs both 
+a _callback_ rimraf and a "normal" rimraf. The variations in file i/o
+seem greater than any difference.
+
+I plan on expandeding with faux async functions to compare any added
+overhead with additional functions being added.
+
+## Platform
+
+I'm currently developing on Windows, though I had cygwin installed 
+prior to v0.6.4 - so sometimes I have POSIX like functionality even though
+I'm running from DOS cmd.
+
+Let me know if something doesn't work, either DOS or POSIX.
 
 ## License 
 

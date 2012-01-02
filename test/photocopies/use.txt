@@ -2,12 +2,12 @@ fn called with input
 err called with input
 fn called with input
 noinputFn called
-[Error: `cb` should be used on async functions with signature f(input, cb). Consider using `with` instead.]
+[Error: `use` is only for async functions with signature f(input, cb). Consider using `with` instead.]
 fn called with input
 err called with input
 fn called with input
 noinputFn called
-[Error: `cb` should be used on async functions with signature f(input, cb). Consider using `with` instead.]
+[Error: `use` is only for async functions with signature f(input, cb). Consider using `with` instead.]
 fn2 called with fn output
 done erred with [Error: fail]
 err called with fn output

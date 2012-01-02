@@ -1,4 +1,8 @@
 fn called with input
 err called with input
+fn called with input
+err called with input
 fn output
-error: [Error: fail]
+error is [Error: fail]
+output is fn output
+error is [Error: fail]

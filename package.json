@@ -7,6 +7,8 @@
     "type": "git",
     "url": "git://github.com/martypdx/callback.js.git"
   },
+  "main": "./lib/callback.js",
+  "keywords": ["async", "asynchronous", "flow", "flow control", "step", "callback", "callbacks"],
   "engines": {
     "node": "~0.6.6"
   },

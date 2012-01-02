@@ -3,12 +3,13 @@ fn called with input
 fn called with input
 err called with input
 fn called with input
-[Error: `pass` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.]
+fn called with input
 fn2 called with input
 noinputFn called
 multiinputFn called with pass is nice
 done erred with [Error: fail]
 multiinputErr called with pass is nice
+noargsFn called
 done called with fn2 output
 done called with noinputFn output
 done called with multiinputFn output
