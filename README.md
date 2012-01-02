@@ -82,7 +82,7 @@ is equivalent to:
 
 	f(input, cb)
 
-For functions that have no input arguments, or more than one argument, see `add` and `with`.
+For functions that have no input arguments, or more than one argument, see `pass` and `add`.
 
 
 ## then ( [f1, [f2, [...]],] cb )
@@ -95,12 +95,10 @@ Since `use` can be combined to do sequential callbacks:
 
 	f1(input, f2.then(f2, cb))
 
-Assuming they are all of type `f(input, cb)`, then can take multiple async functions
+Assuming they are all of type `f(input, cb)`, `then` can take multiple async functions
 before the final callback function:
 
-	f(input, f2.then(f3, f4, f5, f6, cb))
-
-Assuming 
+	f(input, f2.then(f3, f4, f5, f6, cb)) 
 
 ## add ( [arg1, [arg2, [...]],] cb )
 
@@ -124,7 +122,7 @@ Unlike `use`, add does not take a transformation. You can add `adapt` or `xform`
 
 ## pass ( [arg1, [arg2, [...]],] cb )
 
-Use `pass` to indicate the arguments to be passed to the async function being used for the callback. 
+Use `pass` to indicate the exact arguments to be passed to the async function being used for the callback. 
 Unlike `add` or `use`, the callback result is discarded:
 
 	someFn( 'input', fs.rmdir.pass(dir, cb) )
@@ -144,7 +142,8 @@ is equivelent to:
 ## each ( [transform,] cb )
 
 `each` calls an asynchronous function in parallel based on a callback result that can be called with `forEach`. 
-Results are combined into an array which is passed as the result to `cb`:
+Results are combined into an array which is passed as the result to `cb` after all invocations of the 
+underlying function have completed:
 
 	fs.readdir(dir, fs.open.each(cb))
 
@@ -170,7 +169,7 @@ is equivalent to:
 		})
 	})
 
-## adapt (transformFn)
+## adapt (transform)
 
 Modifies the invocation of the callback of an asynchronous function:
 
@@ -192,16 +191,18 @@ See `xform` for more detail on its use.
 
 These functions are used with synchronous functions that have no callback of type:
 
-    function async([arg1, [arg2, [...]],])
+    function sync([arg1, [arg2, [...]],])
 
-Typically, these would be used as endpoints for asynchronous functions:
+such as
 
 	console.log.cb
 
-The functions will throw any err received on callback. 
+Typically, these would be used as endpoints for asynchronous function chains.	
+
+These functions will throw any err received on callback. 
 See `err` to provide an alternative behavior.
 
-## cb[(transform)]
+## cb [ (transform) ]
 
 Adapts a synchronous function by passing the callback 
 results as the first argument. Note that the version without a transformation
@@ -229,7 +230,7 @@ the callback result:
 Useful for specifying the template on response render:
 
 	app.get('/user/:id', function (req, res) {
-	    getUser(req.params.id, res.render.with('user')
+	    getUser( req.params.id, res.render.with('user') )
 	})
 
 `with` will throw any err received on the callback. See `err` to modify the error
@@ -239,7 +240,7 @@ handling of the callback.
 
 These functions modify existing callback functions but still retain the callback signature.
 
-## err (errFn)
+## err (handler)
 
 Causes an err to be routed to the supplied function for handling:
 
@@ -259,7 +260,7 @@ or:
 	}
 	console.log.cb.err(error)
 
-## xform (transformFn)
+## xform (transform)
 
 Calls the supplied transformation function of signature:
 
@@ -311,6 +312,6 @@ technically is:
 
 Can also include an else function:
 
-	f.if(condition).else(f2)(input)
+	f.if(condition).else(f2)(input, cb)
 
 

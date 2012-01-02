@@ -1,0 +1,4 @@
+fn called with input
+err called with input
+FN OUTPUT
+[Error: fail]
