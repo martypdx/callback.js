@@ -1,5 +1,5 @@
-require('../callback')
-var t = require('./test-functions')
+require('../../')
+var t = require('../test-functions')
 
 
 var multiplex = function(input, cb) {

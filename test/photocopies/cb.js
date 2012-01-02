@@ -1,8 +1,5 @@
-require('../callback')
-var t = require('./test-functions')
-
-
-
+require('../../')
+var t = require('../test-functions')
 
 
 t.fn('input', console.log.cb)

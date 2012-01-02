@@ -1,5 +1,5 @@
-require('../callback')
-var t = require('./test-functions')
+require('../../')
+var t = require('../test-functions')
 
 
 t.fn.adapt(upper)('input', t.done)

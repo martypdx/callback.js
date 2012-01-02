@@ -1,7 +1,5 @@
-require('../callback')
-var t = require('./test-functions')
-
-
+require('../../')
+var t = require('../test-functions')
 
 Function.prototype.xcall = function(transform) {
 	var fn = this

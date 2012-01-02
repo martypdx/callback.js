@@ -1,5 +1,5 @@
-require('../callback')
-var t = require('./test-functions')
+require('../../')
+var t = require('../test-functions')
 
 t.fn( 'input', t.fn2.then( t.elseFn, t.done ) )
 
