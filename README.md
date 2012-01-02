@@ -30,7 +30,7 @@ and the callback signature:
 
 *callback* doesn't assume or dictate any particular coding style. 
 Doesn't require creating library objects to manage your functions
-or try to pretend you're writing snychronous code.
+or try to pretend you're writing synchronous code.
 
 Use as much or as little as you like.
 
@@ -44,7 +44,7 @@ These functions are used with asynchronous functions of type:
 
     function async([arg1, [arg2, [...]],] cb)
 
-and wrap them to be used as callbacks:
+which are wrapped to be used as callbacks:
 
 	async.use(cb)
 
@@ -80,14 +80,14 @@ is equivalent to:
 
 `use` is intended for asynchronous functions that have one input argument:
 
-	function asynch(input, cb)
+	f(input, cb)
 
-For functions that have no input arguments, or more than one argument, see `with` and `pass`.
+For functions that have no input arguments, or more than one argument, see `add` and `with`.
 
 
 ## then ( [f1, [f2, [...]],] cb )
 
-Since `use` can be combined to do sequencial callbacks:
+Since `use` can be combined to do sequential callbacks:
 
 	f1(input, f2.use( f2.use(cb) ) )
 
@@ -172,7 +172,7 @@ is equivalent to:
 
 ## adapt (transformFn)
 
-Modifies the invocation of the callback of an ansyncronous function:
+Modifies the invocation of the callback of an asynchronous function:
 
 	f.adapt(upper)(input, cb)
 
@@ -204,7 +204,7 @@ See `err` to provide an alternative behavior.
 ## cb[(transform)]
 
 Adapts a synchronous function by passing the callback 
-results as the first argument. Note that the version without a tranformation
+results as the first argument. Note that the version without a transformation
 is a property getter and not a method:
 
 	console.log.cb
@@ -248,7 +248,7 @@ Causes an err to be routed to the supplied function for handling:
 
 The callback chain is aborted, the modified callback is not called. 
 
-Useful for synchronous methods adpated for callback:
+Useful for synchronous methods adapted for callback:
 
 	res.render.with('template').err(function(err) { ... })
 
