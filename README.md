@@ -190,7 +190,7 @@ is equivalent to:
 	})
 
 Note that any (and all) arguments passed to `f` are added to the tranformation 
-function. Useful for modidying callback results with original input
+function. Useful for modifying callback results with original input
 arguments:
 
 	var readdir = fs.readdir.adapt(function(files, d){
@@ -201,7 +201,8 @@ arguments:
 
 # Functions for Synchronous Functions
 
-These functions are used with synchronous functions that have no callback of type:
+These functions are used with synchronous functions that have no callback,
+of signature type:
 
     function sync([arg1, [arg2, [...]],])
 
@@ -218,7 +219,7 @@ See `err` to provide an alternative behavior.
 
 Adapts a synchronous function by passing the callback 
 results as the first argument. Note that the version without a transformation
-is a property getter and not a method:
+_is a property getter_ and not a method:
 
 	console.log.cb
 
@@ -229,7 +230,7 @@ Optionally accepts a transformation:
 		return text.toUpperCase() 
 	}
 
-`cb` will throw any err received on the callback. See `err` to modify the error
+`cb` will throw any `err` received on the callback. See `err` to modify the error
 handling of the callback.
 
 ## with ( [arg1, [arg2, [...]],] )
@@ -328,29 +329,43 @@ Can also include an else function:
 
 # Housekeeping
 
-## Tests
+Looking for feedback on api and which functions are most useful.
+Don't want to bloat the api with speculative functionality.
 
-The tests are done using a bit of a work-in-progress technique called
-_photocopy testing_. The tests work, they're just a bit more difficult
-to maintain without some tooling that I have planned.
+Currently thinking of adding:
+
+	* `map` function that collects multiple async function callback
+	results:
+		f(input, target.map(f1, f2, f3, cb))
+		//calls:
+		target(f1result, f2result, f3result, cb)
+	* possibly a filter for each:
+		target.each(cb).filter(filter)
+
+## Tests
 
 You can run the tests with
 
 	callback.js> make
 
-## Benchmarks
+The tests are done using a bit of a work-in-progress technique called
+_photocopy testing_. The tests work great, they're just a bit more difficult
+to maintain without some tooling that I have planned.
 
+## Benchmarks
+ 
 In the _examples_ _rimraf_ directory is a benchmark that runs both 
 a _callback_ rimraf and a "normal" rimraf. The variations in file i/o
 seem greater than any difference.
 
-I plan on expandeding with faux async functions to compare any added
-overhead with additional functions being added.
+The overhead of additional functions does not seem significant. However,
+I plan on expanding with some faux async functions to compare any added
+overhead directly.
 
 ## Platform
 
 I'm currently developing on Windows, though I had cygwin installed 
-prior to v0.6.4 - so sometimes I have POSIX like functionality even though
+prior to v0.6.4 - so I have POSIX like functionality even though
 I'm running from DOS cmd.
 
 Let me know if something doesn't work, either DOS or POSIX.
