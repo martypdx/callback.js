@@ -336,10 +336,13 @@ Currently thinking of adding:
 
 * `map` function that collects multiple async function callback
 results:
+
 	f(input, target.map(f1, f2, f3, cb))
 	//calls:
 	target(f1result, f2result, f3result, cb)
+
 * possibly a filter for each:
+
 	target.each(cb).filter(filter)
 
 ## Tests
