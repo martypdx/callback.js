@@ -1,4 +1,4 @@
-# callback.js
+# callback
 
 Expressive, terse, functions for asynchronous and callback functions.
 
@@ -44,7 +44,7 @@ and wrap them to be used as callbacks:
 
 	async.use(cb)
 
-## .use([transform,] cb)
+## use ( [transform,] cb )
 
 Turns an asynchronous function into a callback and includes the 
 results of the callback in the invocation of the function:
@@ -80,7 +80,25 @@ is equivalent to:
 
 For functions that have no input arguments, or more than one argument, see `with` and `pass`.
 
-## add([arg1, [arg2, [...]],] cb)
+
+## then ( [f1, [f2, [...]],] cb )
+
+Since `use` can be combined to do sequencial callbacks:
+
+	f1(input, f2.use( f2.use(cb) ) )
+
+`then` offers a short-hand way to accomplish the same thing:
+
+	f1(input, f2.then(f2, cb))
+
+Assuming they are all of type `f(input, cb)`, then can take multiple async functions
+before the final callback function:
+
+	f(input, f2.then(f3, f4, f5, f6, cb))
+
+Assuming 
+
+## add ( [arg1, [arg2, [...]],] cb )
 
 Use `add` to add arguments *in addition to* the callback result argument
 which will be included as the first argument:
@@ -100,7 +118,7 @@ Unlike `use`, add does not take a transformation. You can add `adapt` or `xform`
 
 `add` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
 
-## pass([arg1, [arg2, [...]],] cb)
+## pass ( [arg1, [arg2, [...]],] cb )
 
 Use `pass` to indicate the arguments to be passed to the async function being used for the callback. 
 Unlike `add` or `use`, the callback result is discarded:
@@ -119,7 +137,7 @@ is equivelent to:
 
 `pass` uses `apply` on the target function, so currently it is not useful on functions that require `this` context.
 
-## each([transform,] cb)
+## each ( [transform,] cb )
 
 `each` calls an asynchronous function in parallel based on a callback result that can be called with `forEach`. 
 Results are combined into an array which is passed as the result to `cb`:
@@ -170,7 +188,7 @@ by passing the callback results as the first argument:
 
 `cb` will throw any err received on the callback.
 
-# with
+# with ( [arg1, [arg2, [...]],] )
 
 Like `cb`, except that `with` allows the specification of arguments *before*
 the callback result:

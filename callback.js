@@ -46,10 +46,36 @@ Object.defineProperty(Function.prototype, 'use', {
   configurable: true
 })
 
+Object.defineProperty(Function.prototype, 'then', {
+  set: function(){},
+  get: function(){
+
+	if(isDev && this.length === 0) {
+		throw new Error('`then` must be called with at least one function, if only one function it must be a callback of signature f(err, results).')
+	}
+
+	var fn = this
+	
+	return function then_fn() {
+
+		var fns = Array.prototype.slice.call(arguments)
+		var next = fns.pop()
+		 ,	use
+		while( use = fns.pop()) {
+			next = use.use(next)
+		}
+
+		return fn.use(next)
+	}
+
+  },
+  configurable: true
+})
+
 Object.defineProperty(Function.prototype, 'add', {
   set: function(){},
   get: function(){
-	//console.log('pass called on f with length', this.length)
+
 	if(isDev && this.length === 0) {
 		throw new Error('`add` is for async functions with signature f([arg1, [arg2, [...]],] cb) that have a cb argument at minimum.')
 	}
