@@ -35,6 +35,14 @@ and the callback signature:
 			})
 		})
 
+or:
+
+	fs.readFile( __filename, 'utf-8', console.log.cb(upper) )
+
+	function upper(data) {
+	  return data.toUpperCase()
+	}
+
 *callback* doesn't assume or dictate any particular coding style. 
 Doesn't require creating library objects to manage your functions
 or try to pretend you're writing synchronous code.
