@@ -17,7 +17,7 @@ and the callback signature:
 		if(!d.isDirectory) {
 			return stat(d, rimraf.use(cb) )
 		}
-		
+
 		dir.if(d.isDirectory()).else(fs.unlink)(d.path, cb)
 
 		function dir(d, cb) {		
@@ -186,15 +186,19 @@ Modifies the invocation of the callback of an asynchronous function:
 is equivalent to:
 
 	f(input, function(err, result){
-		cb(err, upper(result))
+		cb(err, upper(result, input))
 	})
 
-Also equivalent in this case to:
+Note that any (and all) arguments passed to `f` are added to the tranformation 
+function. Useful for modidying callback results with original input
+arguments:
 
-	f(input, cb.xform(upper))
-
-See `xform` for more detail on its use.
-
+	var readdir = fs.readdir.adapt(function(files, d){
+		return files.map(function(f){
+			return path.join(d, f) 
+		})
+	})
+	
 # Functions for Synchronous Functions
 
 These functions are used with synchronous functions that have no callback of type:
