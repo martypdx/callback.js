@@ -26,15 +26,14 @@ and the callback signature:
 	}
 
 	var stat = fs.stat.adapt(function(stat, path) {
-		stat.path = path
-		return stat
-	})
-
-	var readdir = fs.readdir.adapt(function(files, d){
-		return files.map(function(f){
-			return path.join(d, f) 
+			stat.path = path
+			return stat
 		})
-	})
+	 ,	readdir = fs.readdir.adapt(function(files, d){
+			return files.map(function(f){
+				return path.join(d, f) 
+			})
+		})
 
 *callback* doesn't assume or dictate any particular coding style. 
 Doesn't require creating library objects to manage your functions
@@ -90,8 +89,9 @@ is equivalent to:
 
 	f(input, cb)
 
-For functions that have no input arguments, or more than one argument, see `pass` and `add`.
-
+For functions that have no input arguments, or more than one argument, 
+see `pass` and `add`. If you need to modify the results passed on input 
+parameters to the original asynchronous function, see `adapt`.
 
 ## then ( [f1, [f2, [...]],] cb )
 
@@ -130,7 +130,7 @@ Unlike `use`, add does not take a transformation. You can add `adapt` or `xform`
 
 ## pass ( [arg1, [arg2, [...]],] cb )
 
-Use `pass` to indicate the exact arguments to be passed to the async function being used for the callback. 
+Use `pass` to indicate the _exact_ arguments to be passed to the async function being used for the callback. 
 Unlike `add` or `use`, the callback result is discarded:
 
 	someFn( 'input', fs.rmdir.pass(dir, cb) )
@@ -198,7 +198,7 @@ arguments:
 			return path.join(d, f) 
 		})
 	})
-	
+
 # Functions for Synchronous Functions
 
 These functions are used with synchronous functions that have no callback of type:
