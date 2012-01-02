@@ -34,7 +34,7 @@ function rimraf(d, cb) {
 
 	npm install callback
 
-# Functions for asynchronous functions
+# Functions for Asynchronous Functions
 
 These functions are used with asynchronous functions of type:
 
@@ -166,7 +166,25 @@ is equivalent to:
 		})
 	})
 
-# Functions for synchronous functions
+## adapt (transformFn)
+
+Modifies the invocation of the callback of an ansyncronous function:
+
+	f.adapt(upper)(input, cb)
+
+is equivalent to:
+
+	f(input, function(err, result){
+		cb(err, upper(result))
+	})
+
+Also equivalent in this case to:
+
+	f(input, cb.xform(upper))
+
+See `xform` for more detail on its use.
+
+# Functions for Synchronous Functions
 
 These functions are used with synchronous functions that have no callback of type:
 
@@ -179,29 +197,116 @@ Typically, these would be used as endpoints for asynchronous functions:
 The functions will throw any err received on callback. 
 See `err` to provide an alternative behavior.
 
-# cb
+## cb[(transform)]
 
-A simple property getter (not a method) that adapts a synchronous function 
-by passing the callback results as the first argument:
+Adapts a synchronous function by passing the callback 
+results as the first argument. Note that the version without a tranformation
+is a property getter and not a method:
 
 	console.log.cb
 
-`cb` will throw any err received on the callback.
+Optionally accepts a transformation:
 
-# with ( [arg1, [arg2, [...]],] )
+	fs.readFile(__filename, console.log.cb(upper))
+	function upper(text) { 
+		return text.toUpperCase() 
+	}
+
+`cb` will throw any err received on the callback. See `err` to modify the error
+handling of the callback.
+
+## with ( [arg1, [arg2, [...]],] )
 
 Like `cb`, except that `with` allows the specification of arguments *before*
 the callback result:
 
-	fs.readFile( 'run.js', console.log.with('%s') )
+	fs.readFile( __filename, console.log.with('%s') )
 
-Useful for specifying the template on response.render:
+Useful for specifying the template on response render:
 
 	app.get('/user/:id', function (req, res) {
 	    getUser(req.params.id, res.render.with('user')
 	})
 
+`with` will throw any err received on the callback. See `err` to modify the error
+handling of the callback.
+
+# Functions for Callback Functions
+
+These functions modify existing callback functions but still retain the callback signature.
+
+## err (errFn)
+
+Causes an err to be routed to the supplied function for handling:
+
+	function errHandler(err) {...}
+	f(input, cb.err(errHandler))
+
+The callback chain is aborted, the modified callback is not called. 
+
+Useful for synchronous methods adpated for callback:
+
+	res.render.with('template').err(function(err) { ... })
+
+or:
+
+	function error(err) {
+		console.log('error:', err)
+	}
+	console.log.cb.err(error)
+
+## xform (transformFn)
+
+Calls the supplied transformation function of signature:
+
+	f(result) {...}
+
+with the callback result and uses the return value as the result argument for 
+the underlying callback:
+
+	f(input, cb.xform(function(r) {
+		return r.data
+	}))
+
+is equivalent to:
+
+	f(input, function(err, result){
+		cb(err, result.data)
+	})
+
+More useful when combined with other functions like `then` that don't directly 
+take a transform argument:
+
+	f(input, f2.then(f3.xform(upper), f4, cb))
+	function upper(text) {
+		return text.toUpperCase()
+	}
+
+Or along with `with`:
+
+	fs.readFile( __filename, console.log.with('%s')
+		.xform(function(f) {
+			return f.toUpperCase()
+		}))
 
 # Conditionals
+
+These apply to any type of function:
+
+	f.if(condition)(input)
+
+is equivalent to:
+
+	if(condition) {
+		f(input)
+	}
+
+technically is:
+
+	(condition ? f : noop)(input)
+
+Can also include an else function:
+
+	f.if(condition).else(f2)(input)
 
 

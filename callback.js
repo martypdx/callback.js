@@ -1,23 +1,7 @@
 
 var isDev = ( process.env.NODE_ENV !== 'production' )
 
-Function.prototype.if = function(passed) {
 
-	if (passed) {
-		var pass = this
-		this.else = function(){
-			return pass
-		}
-		return pass
-	} else {
-		var fail = function(){}
-		fail.else = function(fn){
-			return fn
-		}
-		return fail
-	}
-}
-//consider .iif for shorter/more peformant when no else?
 
 Object.defineProperty(Function.prototype, 'use', {
   set: function(){},
@@ -194,7 +178,6 @@ Object.defineProperty(Function.prototype, 'with', {
   configurable: true
 })
 
-
 Object.defineProperty(Function.prototype, 'cb', {
   set: function(){},
   get: function(){
@@ -202,8 +185,18 @@ Object.defineProperty(Function.prototype, 'cb', {
 	var fn = this
 
 	return function cb_cb(err, result) {
-		if (err) throw err
-		fn(result)
+		if (typeof err === 'function') {
+			var transform = err
+			return function cb_xform_cb(err, result) {
+				if (err) throw err
+				fn(transform(result))
+			}
+
+			
+		} else {
+			if (err) throw err
+			fn(result)
+		}
 	}
 
   },
@@ -212,29 +205,75 @@ Object.defineProperty(Function.prototype, 'cb', {
 
 /* adapters */
 
-Function.prototype.xform = function(transform) {
-	var fn = this
-	return function(err, results) {
-		if(err) return fn(err)
-		fn(null, transform(results))
-	}
-}
-
-Function.prototype.adapt = function(transform) {
-
-	var fn = this
+Object.defineProperty(Function.prototype, 'xform', {
+  set: function(){},
+  get: function(){
 	
-	return function() {
-		var args = Array.prototype.slice.call(arguments, 0, arguments.length-1)
-		 ,	cb = arguments[arguments.length-1]
-		 , 	newcb = function(err, results){
-				if (err) return cb(err)
-				cb(null, transform(results))
-			}
+	return function xform_fn(transform) {
+		var fn = this
 
-		args.push(newcb)
-
-		var ctx = null //can this be improved?
-		fn.apply(ctx, args)
+		return function xform_cb(err, result) {
+			if (err) return fn(err)
+			fn(null, transform(result))
+		}
 	}
-}
+
+  },
+  configurable: true
+})
+
+Object.defineProperty(Function.prototype, 'adapt', {
+  set: function(){},
+  get: function(){
+	
+	return function adapt_fn(transform) {
+		var fn = this
+
+		return function adapt_cb(err, result) {
+			var args = Array.prototype.slice.call(arguments, 0, arguments.length-1)
+		 	,	cb = arguments[arguments.length-1]
+		 	, 	newcb = function(err, results){
+					if (err) return cb(err)
+					cb(null, transform(results))
+				}
+
+			args.push(newcb)
+
+			var ctx = null
+			fn.apply(ctx, args)
+		}
+	}
+
+  },
+  configurable: true
+})
+
+
+Object.defineProperty(Function.prototype, 'if', {
+  set: function(){},
+  get: function(){
+	
+	var fn = this
+
+	return function if_fn(condition) {
+
+		if (condition) {
+			var pass = this
+			this.else = function(){
+				return pass
+			}
+			return pass
+		} else {
+			var fail = function(){}
+			fail.else = function(fn){
+				return fn
+			}
+			return fail
+		}
+	}
+
+	
+  },
+  configurable: true
+})
+//consider .iif for shorter/more peformant when no else?
