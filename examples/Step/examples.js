@@ -20,3 +20,4 @@ var fs = require('fs')
 fs.readFile( __filename, 'utf-8', console.log.cb(function(data) {
       return data.toUpperCase()
     }) )
+
