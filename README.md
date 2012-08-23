@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/martypdx/callback.js.png)](http://travis-ci.org/martypdx/callback.js)
 # callback
 
 Expressive, terse, functions for asynchronous and callback functions.
